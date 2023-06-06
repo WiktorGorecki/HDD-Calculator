@@ -94,10 +94,6 @@ def calculateNoOfWordsThatFit(number_of_words, disk_space, word_length):
         if max_address >= number_of_words:
             return number_of_words, address_lenth
 
-    # rekurencyjnie!!!! bo inaczej nie dasz rady
-    # jak się da zaadresować to sprawdź, czy jak się odejmie 1bit od adresu i doda 1 do pustego miejsca i zaadresuje puste miejsce, to czy sie bedzie dało zaadresowac na tylu adresach
-    # adres adresowi adresem adresuje adres skurwysynu
-    # kurwa mać masło maślane
 
 
 logo()
