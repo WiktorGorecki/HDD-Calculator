@@ -62,7 +62,7 @@ def print_disk(number_of_words: int, word_length: int, disk_space: int, address_
     if counter != disk_space:
         print("An error occurred!!!")
     #print("\n" + disk_img)
-    print(cyan+"\naddress")
+    print(cyan+"\n\naddress")
     print(green+"word")
     print(grey+"unassigned")
     print('\x1b[0m')
