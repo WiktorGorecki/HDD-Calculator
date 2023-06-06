@@ -39,25 +39,29 @@ def print_disk(number_of_words: int, word_length: int, disk_space: int, address_
     counter = 0
     disk_img = "" + prefix
     blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
+    print("\n Drive model:\n")
+    print(prefix, end="")
     for p in range(0, len(prefix)):
         blanks -= 1
     for b in range(0, number_of_words):
         for a in range(0, address_length):
-            disk_img += cyan
-            disk_img += "a"
+            # disk_img += cyan
+            # disk_img += "a"
+            print(cyan+"a", end="")
             counter += 1
         for w in range(0, word_length):
-            disk_img += green
-            disk_img += "w"
+            # disk_img += green
+            # disk_img += "w"
+            print(green+"w", end="")
             counter += 1
     for blank in range(0, blanks):
-        disk_img += grey
-        disk_img += "u"
+        # disk_img += grey
+        # disk_img += "u"
+        print(grey+"u", end="")
         counter += 1
     if counter != disk_space:
         print("An error occurred!!!")
-    print("\n Drive model:")
-    print("\n" + disk_img)
+    #print("\n" + disk_img)
     print(cyan+"\naddress")
     print(green+"word")
     print(grey+"unassigned")
