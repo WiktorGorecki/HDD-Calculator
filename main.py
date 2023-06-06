@@ -12,7 +12,7 @@ green = '\033[32m'
 grey = '\033[37m'
 
 
-def stats(number_of_words, word_length, disk_space, address_length):
+def stats(number_of_words: int, word_length: int, disk_space: int, address_length: int):
     blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
     print("Stats of the drive: ")
     print("  Assigned space: " + str(round(((disk_space - blanks) / disk_space) * 100)) + "%")
@@ -20,8 +20,21 @@ def stats(number_of_words, word_length, disk_space, address_length):
     print("    - Words: " + str(round(((word_length * number_of_words / disk_space) * 100))) + "%")
     print("  Unassigned space: " + str(round((blanks / disk_space) * 100)) + "%")
 
+    print("\n\n[1] Generate new drive")
+    print("[2] Visualise the drive")
+    print("[3] Exit")
+    answer = input("> ")
+    if answer == "1":
+        clear_screen()
+        logo()
+        run()
+    elif answer == "2":
+        print_disk(number_of_words, word_length, disk_space, address_length)
+    elif answer == "3":
+        quit(0)
 
-def print_disk(number_of_words, word_length, disk_space, address_length, prefix=""):
+
+def print_disk(number_of_words: int, word_length: int, disk_space: int, address_length: int, prefix=""):
     counter = 0
     disk_img = "" + prefix
     blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
@@ -46,11 +59,16 @@ def print_disk(number_of_words, word_length, disk_space, address_length, prefix=
     print('\x1b[0m')
 
     print("\n\n[1] Generate new drive")
-    print("[2] Exit")
+    print("[2] Drive statistics")
+    print("[3] Exit")
     answer = input("> ")
     if answer == "1":
+        clear_screen()
+        logo()
         run()
     elif answer == "2":
+        stats(number_of_words, word_length, disk_space, address_length)
+    elif answer == "3":
         quit(0)
 
 
@@ -86,7 +104,7 @@ def run(error_message=""):
 
     print("\n\n[1] Generate new drive")
     print("[2] Visualise the drive")
-    print("[3] Drive stats")
+    print("[3] Drive statistics")
     print("[4] Exit")
     answer = input("> ")
     if answer == "1":
@@ -94,7 +112,7 @@ def run(error_message=""):
     elif answer == "2":
         print_disk(calculated_number_of_words, word_length, disk_space, calculated_address_length)
     elif answer == "3":
-        stats(calculated_number_of_words, word_length, disk_space, calculated_address_length)
+        stats(calculated_number_of_words, word_length, disk_space, calculated_address_length, )
     elif answer == "4":
         quit(0)
 
