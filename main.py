@@ -15,7 +15,8 @@ grey = '\033[37m'
 def stats(number_of_words: int, word_length: int, disk_space: int, address_length: int):
     blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
     print("Stats of the drive: ")
-    print("  Assigned space: " + str(round(((disk_space - blanks) / disk_space) * 100)) + "%")
+    print("\n  Effective capacity: "+str(number_of_words*word_length)+"b")
+    print("\n  Assigned space: " + str(round(((disk_space - blanks) / disk_space) * 100)) + "%")
     print("    - Addresses: " + str(round(((address_length * number_of_words) / disk_space) * 100)) + "%")
     print("    - Words: " + str(round(((word_length * number_of_words / disk_space) * 100))) + "%")
     print("  Unassigned space: " + str(round((blanks / disk_space) * 100)) + "%")
@@ -51,14 +52,18 @@ def print_disk(number_of_words: int, word_length: int, disk_space: int, address_
             counter += 1
     for blank in range(0, blanks):
         disk_img += grey
-        disk_img += "b"
+        disk_img += "u"
         counter += 1
     if counter != disk_space:
         print("An error occurred!!!")
+    print("\n Drive model:")
     print("\n" + disk_img)
+    print(cyan+"\naddress")
+    print(green+"word")
+    print(grey+"unassigned")
     print('\x1b[0m')
 
-    print("\n\n[1] Generate new drive")
+    print("\n[1] Generate new drive")
     print("[2] Drive statistics")
     print("[3] Exit")
     answer = input("> ")
@@ -87,8 +92,9 @@ def menu(error_message=""):
     else:
         print()
     print()
-    disk_space = int(input("Diskspace:     "))
-    word_length = int(input("Size of word:  "))
+    print("Specify drive properties:")
+    disk_space = int(input("    Capacity :     "))
+    word_length = int(input("    Size of word:  "))
     return disk_space, word_length
 
 
