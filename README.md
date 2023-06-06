@@ -1,5 +1,5 @@
 # HDD-Calcultor
-A simple tool that can help You plan your drive that works like very simplified HDD. It doesn't support tracks and clusters and anything that you can see in real HDD, but makes the job it's suposed to do.
+A simple tool that can help you plan your drive that works like very simplified HDD. It doesn't support tracks and clusters and anything that you can see in real HDD, but makes the job it's suposed to do.
 It calculates how many blocks can fit on your drive. A block stores it's address and a word (data). It can calculate pretty big drive with ease, but visualising a 1MB drive takes some time.
 
 This came handy when I was building a computer in Minecraft and wanted to build a HDD.
