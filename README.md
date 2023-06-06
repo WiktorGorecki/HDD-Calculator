@@ -3,4 +3,10 @@ A simple tool that can help You plan your drive that works like very simplified 
 It calculates how many blocks can fit on your drive. A block stores it's address and a word (data).
 
 ![image](https://github.com/WiktorGorecki/HDD-Calcultor/assets/60294931/2bd84390-d094-4d5e-874d-d16e347c0188)
+
+The input data consists of the size of the disk and size of a single word
+The program calculates how many blocks will fit and how wide the address should be
+
 ![image](https://github.com/WiktorGorecki/HDD-Calcultor/assets/60294931/6f92d5b3-bfd0-4d34-a8d2-6e8b0a910418)
+
+The program can visualise the drive
