@@ -1,21 +1,26 @@
 #TODO: Make a way to manually insert data (with only check if it makes sense (is efficient and will work))
 #TODO: Rename number_of_words to number_of_blocks
+#TODO: Move blanks from functions to place before it's call
 from math import floor
 
 import os
 
 os.system("")
 
-# if os.name != 'nt':
 cyan = '\033[36m'
 green = '\033[32m'
 grey = '\033[37m'
-# else:
-#     cyan = ''
-#     green = ''
-#     grey = ''
+
+def stats(number_of_words, word_length, disk_space, address_length):
+    blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
+    print("Stats of the drive: ")
+    print("  Assigned space: "+str(round(((disk_space-blanks)/disk_space)*100))+"%")
+    print("    - Addresses: "+str(round(((address_length * number_of_words)/disk_space)*100))+"%")
+    print("    - Words: "+str(round(((word_length * number_of_words/disk_space)*100)))+"%")
+    print("  Unassigned space: "+str(round((blanks/disk_space)*100))+"%")
 
 def print_disk(number_of_words, word_length, disk_space, address_length, prefix=""):
+    counter = 0
     disk_img = "" + prefix
     blanks = disk_space-((word_length*number_of_words)+(address_length*number_of_words))
     for p in range(0, len(prefix)):
@@ -24,13 +29,19 @@ def print_disk(number_of_words, word_length, disk_space, address_length, prefix=
         for a in range(0,address_length):
             disk_img+= cyan
             disk_img+="a"
+            counter+=1
         for w in range(0,word_length):
             disk_img+= green
             disk_img+="w"
+            counter += 1
     for blank in range(0,blanks):
         disk_img+=grey
         disk_img+="b"
+        counter += 1
+    if counter!=disk_space:
+        print("An error occured!!!")
     print("\n"+disk_img)
+    print('\x1b[0m')
 
     print("\n\n[1] Generate new drive")
     print("[2] Exit")
@@ -67,14 +78,17 @@ def run(error_message=""):
     print("    Address length:  "+str(calculated_address_length))
 
     print("\n\n[1] Generate new drive")
-    print("[2] Print the drive")
-    print("[3] Exit")
+    print("[2] Visualise the drive")
+    print("[3] Drive stats")
+    print("[4] Exit")
     answer = input("> ")
     if answer=="1":
         run()
     elif answer=="2":
         print_disk(calculated_number_of_words, word_length, disk_space, calculated_address_length)
     elif answer=="3":
+        stats(calculated_number_of_words, word_length, disk_space, calculated_address_length)
+    elif answer=="4":
         quit(0)
 
 def calculateNoOfWordsThatFit(number_of_words, disk_space, word_length):
@@ -82,7 +96,7 @@ def calculateNoOfWordsThatFit(number_of_words, disk_space, word_length):
     while 1:
         max_address = address_lenth**2
         if max_address < number_of_words:
-            address_lenth+=1
+            address_lenth += 1
 
         # Check if disk will fit all the data
         used_bits = (address_lenth*number_of_words) + (word_length*number_of_words)
