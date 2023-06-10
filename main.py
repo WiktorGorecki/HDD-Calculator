@@ -14,6 +14,7 @@ grey = '\033[37m'
 
 def stats(number_of_words: int, word_length: int, disk_space: int, address_length: int):
     blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
+    # Printing the stats
     print("Stats of the drive: ")
     print("\n  Effective capacity: "+str(number_of_words*word_length)+"b")
     print("\n  Assigned space: " + str(round(((disk_space - blanks) / disk_space) * 100)) + "%")
@@ -21,6 +22,7 @@ def stats(number_of_words: int, word_length: int, disk_space: int, address_lengt
     print("    - Words: " + str(round(((word_length * number_of_words / disk_space) * 100))) + "%")
     print("  Unassigned space: " + str(round((blanks / disk_space) * 100)) + "%")
 
+    # Menu
     print("\n\n[1] Generate new drive")
     print("[2] Visualise the drive")
     print("[3] Exit")
@@ -37,7 +39,6 @@ def stats(number_of_words: int, word_length: int, disk_space: int, address_lengt
 
 def print_disk(number_of_words: int, word_length: int, disk_space: int, address_length: int, prefix=""):
     counter = 0
-    disk_img = "" + prefix
     blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
     print("\n Drive model:\n")
     print(prefix, end="")
@@ -45,28 +46,24 @@ def print_disk(number_of_words: int, word_length: int, disk_space: int, address_
         blanks -= 1
     for b in range(0, number_of_words):
         for a in range(0, address_length):
-            # disk_img += cyan
-            # disk_img += "a"
             print(cyan+"a", end="")
             counter += 1
         for w in range(0, word_length):
-            # disk_img += green
-            # disk_img += "w"
             print(green+"w", end="")
             counter += 1
     for blank in range(0, blanks):
-        # disk_img += grey
-        # disk_img += "u"
+
         print(grey+"u", end="")
         counter += 1
     if counter != disk_space:
         print("An error occurred!!!")
-    #print("\n" + disk_img)
+    # Legend informing what does each colour represent
     print(cyan+"\n\naddress")
     print(green+"word")
     print(grey+"unassigned")
     print('\x1b[0m')
 
+    # Menu
     print("\n[1] Generate new drive")
     print("[2] Drive statistics")
     print("[3] Exit")
@@ -86,6 +83,9 @@ def clear_screen():
 
 
 def logo():
+    """
+    Function that prints name of the program and name of the author
+    """
     print("Simple HDD calculator")
     print("By: Wiktor Górecki (https://github.com/WiktorGorecki)")
 
@@ -128,6 +128,13 @@ def run(error_message=""):
 
 
 def calculateNoOfWordsThatFit(number_of_words, disk_space, word_length):
+    """
+    Calculates maximum number of blocks that fit on specified drive
+    :param number_of_words: Number of blocks of data that the disk will store
+    :param disk_space: Number of unassigned bits that the program will assign
+    :param word_length: Number of bits that one block will store
+    :return: Number of words, Width of the address in a block
+    """
     address_length = 1
     while 1:
         max_address = address_length ** 2
