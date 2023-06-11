@@ -1,5 +1,4 @@
 # TODO: Make a way to manually insert data (with only check if it makes sense (is efficient and will work))
-# TODO: Rename number_of_words to number_of_blocks
 # TODO: Move blanks from functions to place before it's call
 from math import floor
 
@@ -12,14 +11,15 @@ green = '\033[32m'
 grey = '\033[37m'
 
 
-def stats(number_of_words: int, word_length: int, disk_space: int, address_length: int):
-    blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
+def stats(number_of_blocks: int, word_width: int, disk_space: int, address_width: int):
+    blanks = disk_space - ((word_width * number_of_blocks) + (address_width * number_of_blocks))
+
     # Printing the stats
     print("Stats of the drive: ")
-    print("\n  Effective capacity: "+str(number_of_words*word_length)+"b")
+    print("\n  Effective capacity: " + str(number_of_blocks * word_width) + "b")
     print("\n  Assigned space: " + str(round(((disk_space - blanks) / disk_space) * 100)) + "%")
-    print("    - Addresses: " + str(round(((address_length * number_of_words) / disk_space) * 100)) + "%")
-    print("    - Words: " + str(round(((word_length * number_of_words / disk_space) * 100))) + "%")
+    print("    - Addresses: " + str(round(((address_width * number_of_blocks) / disk_space) * 100)) + "%")
+    print("    - Words: " + str(round(((word_width * number_of_blocks / disk_space) * 100))) + "%")
     print("  Unassigned space: " + str(round((blanks / disk_space) * 100)) + "%")
 
     # Menu
@@ -32,28 +32,27 @@ def stats(number_of_words: int, word_length: int, disk_space: int, address_lengt
         logo()
         run()
     elif answer == "2":
-        print_disk(number_of_words, word_length, disk_space, address_length)
+        print_disk(number_of_blocks, word_width, disk_space, address_width)
     elif answer == "3":
         quit(0)
 
 
-def print_disk(number_of_words: int, word_length: int, disk_space: int, address_length: int, prefix=""):
+def print_disk(number_of_blocks: int, word_width: int, disk_space: int, address_width: int, prefix=""):
     counter = 0
-    blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
+    blanks = disk_space - ((word_width * number_of_blocks) + (address_width * number_of_blocks))
     print("\n Drive model:\n")
     print(prefix, end="")
     for p in range(0, len(prefix)):
         blanks -= 1
-    for b in range(0, number_of_words):
-        for a in range(0, address_length):
-            print(cyan+"a", end="")
+    for b in range(0, number_of_blocks):
+        for a in range(0, address_width):
+            print(cyan + "a", end="")
             counter += 1
-        for w in range(0, word_length):
-            print(green+"w", end="")
+        for w in range(0, word_width):
+            print(green + "w", end="")
             counter += 1
     for blank in range(0, blanks):
-
-        print(grey+"u", end="")
+        print(grey + "u", end="")
         counter += 1
     if counter != disk_space:
         print("An error occurred!!!")
@@ -73,7 +72,7 @@ def print_disk(number_of_words: int, word_length: int, disk_space: int, address_
         logo()
         run()
     elif answer == "2":
-        stats(number_of_words, word_length, disk_space, address_length)
+        stats(number_of_blocks, word_width, disk_space, address_width)
     elif answer == "3":
         quit(0)
 
@@ -98,19 +97,19 @@ def menu(error_message=""):
     print()
     print("Specify drive properties:")
     disk_space = int(input("    Capacity :     "))
-    word_length = int(input("    Size of word:  "))
-    return disk_space, word_length
+    word_width = int(input("    Size of word:  "))
+    return disk_space, word_width
 
 
 def run(error_message=""):
-    disk_space, word_length = menu(error_message)
-    number_of_words = floor(disk_space / word_length)
+    disk_space, word_width = menu(error_message)
+    number_of_blocks = floor(disk_space / word_width)
 
-    calculated_number_of_words, calculated_address_length = calculateNoOfWordsThatFit(number_of_words, disk_space,
-                                                                                      word_length)
+    calculated_number_of_blocks, calculated_address_width = calculateNoOfBlocksThatFit(number_of_blocks, disk_space,
+                                                                                       word_width)
     print("\nCalculated parameters:")
-    print("    Number of words: " + str(calculated_number_of_words))
-    print("    Address length:  " + str(calculated_address_length))
+    print("    Number of words: " + str(calculated_number_of_blocks))
+    print("    Address width:  " + str(calculated_address_width))
 
     print("\n\n[1] Generate new drive")
     print("[2] Visualise the drive")
@@ -120,35 +119,35 @@ def run(error_message=""):
     if answer == "1":
         run()
     elif answer == "2":
-        print_disk(calculated_number_of_words, word_length, disk_space, calculated_address_length)
+        print_disk(calculated_number_of_blocks, word_width, disk_space, calculated_address_width)
     elif answer == "3":
-        stats(calculated_number_of_words, word_length, disk_space, calculated_address_length, )
+        stats(calculated_number_of_blocks, word_width, disk_space, calculated_address_width, )
     elif answer == "4":
         quit(0)
 
 
-def calculateNoOfWordsThatFit(number_of_words, disk_space, word_length):
+def calculateNoOfBlocksThatFit(number_of_blocks: int, disk_space: int, word_width: int):
     """
     Calculates maximum number of blocks that fit on specified drive
-    :param number_of_words: Number of blocks of data that the disk will store
+    :param number_of_blocks: Number of blocks of data that the disk will store
     :param disk_space: Number of unassigned bits that the program will assign
-    :param word_length: Number of bits that one block will store
+    :param word_width: Number of bits that one block will store
     :return: Number of words, Width of the address in a block
     """
-    address_length = 1
+    address_width = 1
     while 1:
-        max_address = address_length ** 2
-        if max_address < number_of_words:
-            address_length += 1
+        max_address = address_width ** 2
+        if max_address < number_of_blocks:
+            address_width += 1
 
         # Check if disk will fit all the data
-        used_bits = (address_length * number_of_words) + (word_length * number_of_words)
+        used_bits = (address_width * number_of_blocks) + (word_width * number_of_blocks)
         while used_bits > disk_space:
-            number_of_words -= 1
-            used_bits = (address_length * number_of_words) + (word_length * number_of_words)
+            number_of_blocks -= 1
+            used_bits = (address_width * number_of_blocks) + (word_width * number_of_blocks)
 
-        if max_address >= number_of_words:
-            return number_of_words, address_length
+        if max_address >= number_of_blocks:
+            return number_of_blocks, address_width
 
 
 logo()
