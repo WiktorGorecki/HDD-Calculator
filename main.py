@@ -55,11 +55,19 @@ def print_disk(number_of_blocks: int, word_width: int, disk_space: int, address_
         print(grey + "u", end="")
         counter += 1
     if counter != disk_space:
-        print("An error occurred!!!")
+        if counter > disk_space:
+            print("Error: The disk visualisation has more bits than the actual disk!!!")
+        elif counter < disk_space:
+            print("Error: The disk visualisation has less bits than the actual disk!!!")
+            print("You should count the drawn bits and check if it matches number of address and word bits. If yes, "
+                  "then you should probably add some blanks, and call it a day")
+        else:
+            print("Error: The disk visualisation doesn't contain valid number of bits!!!")
+
     # Legend informing what does each colour represent
-    print(cyan+"\n\naddress")
-    print(green+"word")
-    print(grey+"unassigned")
+    print(cyan + "\n\naddress")
+    print(green + "word")
+    print(grey + "unassigned")
     print('\x1b[0m')
 
     # Menu
