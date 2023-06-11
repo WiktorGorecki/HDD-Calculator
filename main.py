@@ -84,7 +84,7 @@ def clear_screen():
 
 def logo():
     """
-    Function that prints name of the program and name of the author
+    Function that prints name of the program and name of the author.
     """
     print("Simple HDD calculator")
     print("By: Wiktor Górecki (https://github.com/WiktorGorecki)")
