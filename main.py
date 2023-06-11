@@ -97,7 +97,7 @@ def logo():
     print("By: Wiktor Górecki (https://github.com/WiktorGorecki)")
 
 
-def menu(error_message=""):
+def drive_input(error_message=""):
     if error_message:
         print(error_message)
     else:
@@ -110,11 +110,11 @@ def menu(error_message=""):
 
 
 def run(error_message=""):
-    disk_space, word_width = menu(error_message)
+    disk_space, word_width = drive_input(error_message)
     number_of_blocks = floor(disk_space / word_width)
 
-    calculated_number_of_blocks, calculated_address_width = calculateNoOfBlocksThatFit(number_of_blocks, disk_space,
-                                                                                       word_width)
+    calculated_number_of_blocks, calculated_address_width = calculate_number_of_fitting_blocks(number_of_blocks,
+                                                                                               disk_space, word_width)
     print("\nCalculated parameters:")
     print("    Number of words: " + str(calculated_number_of_blocks))
     print("    Address width:  " + str(calculated_address_width))
@@ -134,7 +134,7 @@ def run(error_message=""):
         quit(0)
 
 
-def calculateNoOfBlocksThatFit(number_of_blocks: int, disk_space: int, word_width: int):
+def calculate_number_of_fitting_blocks(number_of_blocks: int, disk_space: int, word_width: int):
     """
     Calculates maximum number of blocks that fit on specified drive
     :param number_of_blocks: Number of blocks of data that the disk will store
