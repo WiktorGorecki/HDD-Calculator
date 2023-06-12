@@ -11,6 +11,20 @@ green = '\033[32m'
 grey = '\033[37m'
 
 
+def stats_menu(number_of_blocks, word_width, disk_space, address_width):
+    answer = input("> ")
+    if answer == "1":
+        clear_screen()
+        logo()
+        run()
+    elif answer == "2":
+        print_disk(number_of_blocks, word_width, disk_space, address_width)
+    elif answer == "3":
+        quit(0)
+    else:
+        stats_menu(number_of_blocks, word_width, disk_space, address_width)
+
+
 def stats(number_of_blocks: int, word_width: int, disk_space: int, address_width: int):
     blanks = disk_space - ((word_width * number_of_blocks) + (address_width * number_of_blocks))
 
@@ -26,15 +40,7 @@ def stats(number_of_blocks: int, word_width: int, disk_space: int, address_width
     print("\n\n[1] Generate new drive")
     print("[2] Visualise the drive")
     print("[3] Exit")
-    answer = input("> ")
-    if answer == "1":
-        clear_screen()
-        logo()
-        run()
-    elif answer == "2":
-        print_disk(number_of_blocks, word_width, disk_space, address_width)
-    elif answer == "3":
-        quit(0)
+    stats_menu(number_of_blocks, word_width, disk_space, address_width)
 
 
 def print_disk(number_of_blocks: int, word_width: int, disk_space: int, address_width: int, prefix=""):
@@ -97,6 +103,16 @@ def logo():
     print("By: Wiktor Górecki (https://github.com/WiktorGorecki)")
 
 
+def number_input(msg: str):
+    while 1:
+        try:
+            result = int(input(msg))
+            break
+        except ValueError:
+            print("Error: NaN")
+    return result
+
+
 def drive_input(error_message=""):
     if error_message:
         print(error_message)
@@ -104,8 +120,8 @@ def drive_input(error_message=""):
         print()
     print()
     print("Specify drive properties:")
-    disk_space = int(input("    Capacity :     "))
-    word_width = int(input("    Size of word:  "))
+    disk_space = number_input("    Capacity :     ")
+    word_width = number_input("    Size of word:  ")
     return disk_space, word_width
 
 
