@@ -1,5 +1,6 @@
 import importlib
 import os
+import importlib.util
 
 
 def run_plugin(plugin_path):
