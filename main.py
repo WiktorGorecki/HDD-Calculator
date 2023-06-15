@@ -1,6 +1,8 @@
 import os
 import importlib.util
 
+from utils import run_plugin, load_plugins
+
 os.system("")
 
 CYAN = '\033[36m'
@@ -126,34 +128,6 @@ def drive_input(error_message=""):
     return disk_space, word_width
 
 
-def run_plugin(plugin_path):
-    plugin_name = os.path.splitext(os.path.basename(plugin_path))[0]
-    spec = importlib.util.spec_from_file_location(plugin_name, plugin_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    result = module.run()
-
-    if result:
-        print("\nReturned result from the plugin: ", result)
-
-        # Call visualize function with the returned result
-        show_disk(*result)
-
-        # Call stats function with the returned result
-        show_stats(*result)
-
-
-
-def load_plugins():
-    plugin_folder = "plugins"
-    plugins = []
-    if os.path.isdir(plugin_folder):
-        for filename in os.listdir(plugin_folder):
-            if filename.endswith(".py"):
-                plugins.append(os.path.join(plugin_folder, filename))
-    return plugins
-
-
 def main_menu():
     clear_screen()
     show_logo()
@@ -181,8 +155,9 @@ def plugins_menu():
         main_menu()
     elif answer.isdigit() and 0 < int(answer) <= len(plugins):
         plugin_path = plugins[int(answer) - 1]
-
-        run_plugin(plugin_path)
+        answer = run_plugin(plugin_path)
+        show_disk(*answer)
+        show_stats(*answer)
     else:
         plugins_menu()
 
