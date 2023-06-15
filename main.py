@@ -1,4 +1,5 @@
 import os
+import importlib.util
 
 os.system("")
 
@@ -18,7 +19,11 @@ def show_stats_menu(number_of_blocks, word_width, disk_space, address_width):
     elif answer == "3":
         quit(0)
     else:
-        show_stats_menu(number_of_blocks, word_width, disk_space, address_width)
+        stats_menu_path = os.path.join("plugins", f"stats_menu_{answer}.py")
+        if os.path.exists(stats_menu_path):
+            run_plugin(stats_menu_path, number_of_blocks, word_width, disk_space, address_width)
+        else:
+            show_stats_menu(number_of_blocks, word_width, disk_space, address_width)
 
 
 def show_stats(number_of_blocks: int, word_width: int, disk_space: int, address_width: int):
@@ -121,6 +126,14 @@ def drive_input(error_message=""):
     return disk_space, word_width
 
 
+def run_plugin(plugin_path, *args):
+    plugin_name = os.path.splitext(os.path.basename(plugin_path))[0]
+    spec = importlib.util.spec_from_file_location(plugin_name, plugin_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(*args)
+
+
 def run(error_message=""):
     disk_space, word_width = drive_input(error_message)
     number_of_blocks = disk_space // word_width
@@ -170,5 +183,56 @@ def calculate_fitting_blocks(number_of_blocks: int, disk_space: int, word_width:
             return number_of_blocks, address_width
 
 
-show_logo()
-run()
+def load_plugins():
+    plugin_folder = "plugins"
+    plugins = []
+    if os.path.isdir(plugin_folder):
+        for filename in os.listdir(plugin_folder):
+            if filename.endswith(".py"):
+                plugins.append(os.path.join(plugin_folder, filename))
+    return plugins
+
+
+def main_menu():
+    clear_screen()
+    show_logo()
+
+    print("\n\n[1] Calculate a simple drive")
+    print("[2] Plugins")
+    print("[3] Exit")
+    answer = input("> ")
+    if answer == "1":
+        run()
+    elif answer == "2":
+        plugins_menu()
+    elif answer == "3":
+        quit(0)
+    else:
+        main_menu()
+
+
+def plugins_menu():
+    # Load plugins
+    plugins = load_plugins()
+    if plugins:
+        print("\nAvailable Plugins:")
+        for i, plugin in enumerate(plugins, start=1):
+            print(f"[{i}] {plugin}")
+        print("Enter the number of the plugin to execute or press Enter to continue.")
+
+        plugin_number = input("> ")
+        if plugin_number:
+            try:
+                plugin_index = int(plugin_number) - 1
+                selected_plugin = plugins[plugin_index]
+                run_plugin(selected_plugin)
+            except (ValueError, IndexError):
+                print("Invalid plugin number. Continuing...")
+
+
+def main():
+    main_menu()
+
+
+if __name__ == "__main__":
+    main()
