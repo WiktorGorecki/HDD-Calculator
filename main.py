@@ -144,9 +144,9 @@ def main_menu():
 def plugins_menu():
     plugins = load_plugins()
 
-    print("\n\nChoose a plugin: ")
-    for index, plugin in enumerate(plugins, start=1):
-        print(f"[{index}] {os.path.splitext(os.path.basename(plugin))[0]}")
+    print("\nChoose a plugin: ")
+    for index, (plugin_path, display_name) in enumerate(plugins, start=1):
+        print(f"[{index}] {display_name}")
 
     print("\n[0] Back")
     answer = input("> ")
@@ -154,10 +154,10 @@ def plugins_menu():
     if answer == "0":
         main_menu()
     elif answer.isdigit() and 0 < int(answer) <= len(plugins):
-        plugin_path = plugins[int(answer) - 1]
-        answer = run_plugin(plugin_path)
-        show_disk(*answer)
-        show_stats(*answer)
+        plugin_path, _ = plugins[int(answer) - 1]
+        clear_screen()
+        show_logo()
+        run_plugin(plugin_path)
     else:
         plugins_menu()
 
