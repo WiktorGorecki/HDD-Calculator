@@ -1,66 +1,81 @@
-# TODO: Make a way to manually insert data (with only check if it makes sense (is efficient and will work))
-# TODO: Rename number_of_words to number_of_blocks
-# TODO: Move blanks from functions to place before it's call
-from math import floor
-
 import os
+import importlib.util
+
+from utils import run_plugin, load_plugins
 
 os.system("")
 
-cyan = '\033[36m'
-green = '\033[32m'
-grey = '\033[37m'
+CYAN = '\033[36m'
+GREEN = '\033[32m'
+GREY = '\033[37m'
 
 
-def stats(number_of_words: int, word_length: int, disk_space: int, address_length: int):
-    blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
+def show_stats_menu(number_of_blocks, word_width, disk_space, address_width):
+    answer = input("> ")
+    if answer == "1":
+        clear_screen()
+        show_logo()
+    elif answer == "2":
+        show_disk(number_of_blocks, word_width, disk_space, address_width)
+    elif answer == "3":
+        quit(0)
+    else:
+        stats_menu_path = os.path.join("plugins", f"stats_menu_{answer}.py")
+        if os.path.exists(stats_menu_path):
+            run_plugin(stats_menu_path, number_of_blocks, word_width, disk_space, address_width)
+        else:
+            show_stats_menu(number_of_blocks, word_width, disk_space, address_width)
+
+
+def show_stats(number_of_blocks: int, word_width: int, disk_space: int, address_width: int):
+    blanks = disk_space - ((word_width * number_of_blocks) + (address_width * number_of_blocks))
+
     # Printing the stats
     print("Stats of the drive: ")
-    print("\n  Effective capacity: "+str(number_of_words*word_length)+"b")
+    print("\n  Effective capacity: " + str(number_of_blocks * word_width) + "b")
     print("\n  Assigned space: " + str(round(((disk_space - blanks) / disk_space) * 100)) + "%")
-    print("    - Addresses: " + str(round(((address_length * number_of_words) / disk_space) * 100)) + "%")
-    print("    - Words: " + str(round(((word_length * number_of_words / disk_space) * 100))) + "%")
+    print("    - Addresses: " + str(round(((address_width * number_of_blocks) / disk_space) * 100)) + "%")
+    print("    - Words: " + str(round(((word_width * number_of_blocks / disk_space) * 100))) + "%")
     print("  Unassigned space: " + str(round((blanks / disk_space) * 100)) + "%")
 
     # Menu
     print("\n\n[1] Generate new drive")
-    print("[2] Visualise the drive")
-    print("[3] Exit")
-    answer = input("> ")
-    if answer == "1":
-        clear_screen()
-        logo()
-        run()
-    elif answer == "2":
-        print_disk(number_of_words, word_length, disk_space, address_length)
-    elif answer == "3":
-        quit(0)
+    print("[2] Visualize the drive")
+    print("[3] Back to the main menu")
+    show_stats_menu(number_of_blocks, word_width, disk_space, address_width)
 
 
-def print_disk(number_of_words: int, word_length: int, disk_space: int, address_length: int, prefix=""):
+def show_disk(number_of_blocks: int, word_width: int, disk_space: int, address_width: int, prefix=""):
     counter = 0
-    blanks = disk_space - ((word_length * number_of_words) + (address_length * number_of_words))
+    blanks = disk_space - ((word_width * number_of_blocks) + (address_width * number_of_blocks))
     print("\n Drive model:\n")
     print(prefix, end="")
-    for p in range(0, len(prefix)):
+    for p in range(len(prefix)):
         blanks -= 1
-    for b in range(0, number_of_words):
-        for a in range(0, address_length):
-            print(cyan+"a", end="")
+    for b in range(number_of_blocks):
+        for a in range(address_width):
+            print(CYAN + "a", end="")
             counter += 1
-        for w in range(0, word_length):
-            print(green+"w", end="")
+        for w in range(word_width):
+            print(GREEN + "w", end="")
             counter += 1
-    for blank in range(0, blanks):
-
-        print(grey+"u", end="")
+    for _ in range(blanks):
+        print(GREY + "u", end="")
         counter += 1
     if counter != disk_space:
-        print("An error occurred!!!")
-    # Legend informing what does each colour represent
-    print(cyan+"\n\naddress")
-    print(green+"word")
-    print(grey+"unassigned")
+        if counter > disk_space:
+            print("Error: The disk visualization has more bits than the actual disk!!!")
+        elif counter < disk_space:
+            print("Error: The disk visualization has fewer bits than the actual disk!!!")
+            print("You should count the drawn bits and check if it matches the number of address and word bits. "
+                  "If yes, then you should probably add some blanks and call it a day")
+        else:
+            print("Error: The disk visualization doesn't contain a valid number of bits!!!")
+
+    # Legend informing what each color represents
+    print(CYAN + "\n\naddress")
+    print(GREEN + "word")
+    print(GREY + "unassigned")
     print('\x1b[0m')
 
     # Menu
@@ -70,86 +85,82 @@ def print_disk(number_of_words: int, word_length: int, disk_space: int, address_
     answer = input("> ")
     if answer == "1":
         clear_screen()
-        logo()
-        run()
+        show_logo()
     elif answer == "2":
-        stats(number_of_words, word_length, disk_space, address_length)
+        show_stats(number_of_blocks, word_width, disk_space, address_width)
     elif answer == "3":
         quit(0)
+    else:
+        show_stats_menu(number_of_blocks, word_width, disk_space, address_width)
 
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def logo():
+def show_logo():
     """
-    Function that prints name of the program and name of the author.
+    Function that prints the name of the program and the name of the author.
     """
     print("Simple HDD calculator")
     print("By: Wiktor Górecki (https://github.com/WiktorGorecki)")
 
 
-def menu(error_message=""):
+def get_number_input(msg: str):
+    while True:
+        try:
+            result = int(input(msg))
+            break
+        except ValueError:
+            print("Error: NaN")
+    return result
+
+
+def drive_input(error_message=""):
     if error_message:
         print(error_message)
     else:
         print()
     print()
     print("Specify drive properties:")
-    disk_space = int(input("    Capacity :     "))
-    word_length = int(input("    Size of word:  "))
-    return disk_space, word_length
+    disk_space = get_number_input("    Capacity :     ")
+    word_width = get_number_input("    Size of word:  ")
+    return disk_space, word_width
 
 
-def run(error_message=""):
-    disk_space, word_length = menu(error_message)
-    number_of_words = floor(disk_space / word_length)
+def main_menu():
+    clear_screen()
+    show_logo()
 
-    calculated_number_of_words, calculated_address_length = calculateNoOfWordsThatFit(number_of_words, disk_space,
-                                                                                      word_length)
-    print("\nCalculated parameters:")
-    print("    Number of words: " + str(calculated_number_of_words))
-    print("    Address length:  " + str(calculated_address_length))
-
-    print("\n\n[1] Generate new drive")
-    print("[2] Visualise the drive")
-    print("[3] Drive statistics")
-    print("[4] Exit")
-    answer = input("> ")
-    if answer == "1":
-        run()
-    elif answer == "2":
-        print_disk(calculated_number_of_words, word_length, disk_space, calculated_address_length)
-    elif answer == "3":
-        stats(calculated_number_of_words, word_length, disk_space, calculated_address_length, )
-    elif answer == "4":
+    print("\n\n[1] Plugins")
+    print("[2] Exit")
+    main_menu_answer = input("> ")
+    if main_menu_answer == "1":
+        plugins_menu()
+    elif main_menu_answer == "2":
         quit(0)
 
 
-def calculateNoOfWordsThatFit(number_of_words, disk_space, word_length):
-    """
-    Calculates maximum number of blocks that fit on specified drive
-    :param number_of_words: Number of blocks of data that the disk will store
-    :param disk_space: Number of unassigned bits that the program will assign
-    :param word_length: Number of bits that one block will store
-    :return: Number of words, Width of the address in a block
-    """
-    address_length = 1
-    while 1:
-        max_address = address_length ** 2
-        if max_address < number_of_words:
-            address_length += 1
+def plugins_menu():
+    plugins = load_plugins()
 
-        # Check if disk will fit all the data
-        used_bits = (address_length * number_of_words) + (word_length * number_of_words)
-        while used_bits > disk_space:
-            number_of_words -= 1
-            used_bits = (address_length * number_of_words) + (word_length * number_of_words)
+    print("\n\nChoose a plugin: ")
+    for index, plugin in enumerate(plugins, start=1):
+        print(f"[{index}] {os.path.splitext(os.path.basename(plugin))[0]}")
 
-        if max_address >= number_of_words:
-            return number_of_words, address_length
+    print("\n[0] Back")
+    answer = input("> ")
+
+    if answer == "0":
+        main_menu()
+    elif answer.isdigit() and 0 < int(answer) <= len(plugins):
+        plugin_path = plugins[int(answer) - 1]
+        answer = run_plugin(plugin_path)
+        show_disk(*answer)
+        show_stats(*answer)
+    else:
+        plugins_menu()
 
 
-logo()
-run()
+if __name__ == "__main__":
+    main_menu()
