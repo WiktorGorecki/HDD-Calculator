@@ -19,3 +19,6 @@ These are statistics of 64b drive with 8b word width:
 
 ## Releases
 Latest release: [Link](https://github.com/WiktorGorecki/HDD-Calculator/releases/latest)
+
+
+American scientists created an infinite drive. Now they're waiting until formatting finishes.
