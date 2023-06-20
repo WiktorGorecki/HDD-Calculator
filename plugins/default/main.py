@@ -1,7 +1,7 @@
 import os
 from math import floor
 
-from ..main import drive_input
+from main import drive_input
 
 
 def run():
