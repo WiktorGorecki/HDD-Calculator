@@ -22,7 +22,7 @@ def show_stats_menu(number_of_blocks, word_width, disk_space, address_width):
     else:
         stats_menu_path = os.path.join("plugins", f"stats_menu_{answer}.py")
         if os.path.exists(stats_menu_path):
-            run_plugin(stats_menu_path, number_of_blocks, word_width, disk_space, address_width)
+            run_plugin(stats_menu_path)
         else:
             show_stats_menu(number_of_blocks, word_width, disk_space, address_width)
 
@@ -155,6 +155,7 @@ def plugins_menu():
         main_menu()
     elif answer.isdigit() and 0 < int(answer) <= len(plugins):
         plugin_path, _ = plugins[int(answer) - 1]
+        plugin_path += ".py"
         clear_screen()
         show_logo()
         run_plugin(plugin_path)
