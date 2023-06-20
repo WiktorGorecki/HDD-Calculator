@@ -22,7 +22,7 @@ def show_stats_menu(number_of_blocks, word_width, disk_space, address_width):
     else:
         stats_menu_path = os.path.join("plugins", f"stats_menu_{answer}.py")
         if os.path.exists(stats_menu_path):
-            run_plugin(stats_menu_path, number_of_blocks, word_width, disk_space, address_width)
+            run_plugin(stats_menu_path)
         else:
             show_stats_menu(number_of_blocks, word_width, disk_space, address_width)
 
@@ -144,9 +144,9 @@ def main_menu():
 def plugins_menu():
     plugins = load_plugins()
 
-    print("\n\nChoose a plugin: ")
-    for index, plugin in enumerate(plugins, start=1):
-        print(f"[{index}] {os.path.splitext(os.path.basename(plugin))[0]}")
+    print("\nChoose a plugin: ")
+    for index, (plugin_path, display_name) in enumerate(plugins, start=1):
+        print(f"[{index}] {display_name}")
 
     print("\n[0] Back")
     answer = input("> ")
@@ -154,10 +154,9 @@ def plugins_menu():
     if answer == "0":
         main_menu()
     elif answer.isdigit() and 0 < int(answer) <= len(plugins):
-        plugin_path = plugins[int(answer) - 1]
-        answer = run_plugin(plugin_path)
-        show_disk(*answer)
-        show_stats(*answer)
+        plugin_path, _ = plugins[int(answer) - 1]
+        plugin_path += "\main.py"
+        run_plugin(plugin_path)
     else:
         plugins_menu()
 
