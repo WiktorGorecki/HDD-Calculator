@@ -1,5 +1,4 @@
 import os
-import importlib.util
 
 from utils import run_plugin, load_plugins
 
@@ -155,7 +154,7 @@ def plugins_menu():
         main_menu()
     elif answer.isdigit() and 0 < int(answer) <= len(plugins):
         plugin_path, _ = plugins[int(answer) - 1]
-        plugin_path += "\main.py"
+        plugin_path += "/main.py"
         run_plugin(plugin_path)
     else:
         plugins_menu()
