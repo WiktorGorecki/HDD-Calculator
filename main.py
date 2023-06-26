@@ -21,7 +21,7 @@ def show_stats_menu(number_of_blocks, word_width, disk_space, address_width):
     else:
         stats_menu_path = os.path.join("plugins", f"stats_menu_{answer}.py")
         if os.path.exists(stats_menu_path):
-            run_plugin(stats_menu_path)
+            result = run_plugin(stats_menu_path)
         else:
             show_stats_menu(number_of_blocks, word_width, disk_space, address_width)
 

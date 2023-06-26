@@ -5,16 +5,18 @@ import importlib.util
 
 
 def run_plugin(plugin_path):
-    print(plugin_path)
-    plugin_name = os.path.splitext(os.path.basename(plugin_path))[0]
-    spec = importlib.util.spec_from_file_location(plugin_name, plugin_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    result = module.run()
+    try:
+        plugin_name = os.path.splitext(os.path.basename(plugin_path))[0]
+        spec = importlib.util.spec_from_file_location(plugin_name, plugin_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        result = module.run()
 
-    if result:
-        print("\nReturned result from the plugin: ", result)
-        return result
+        if result:
+            print("\nReturned result from the plugin: ", result)
+            return result
+    except (ModuleNotFoundError, AttributeError, FileNotFoundError):
+        print("Error: Failed to run the plugin")
 
 
 def load_plugins():
