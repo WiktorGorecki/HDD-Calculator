@@ -35,7 +35,8 @@ def handle_plugins_menu():
     label.pack(pady=10)
 
     for index, plugin in enumerate(plugins, start=1):
-        plugin_name = os.path.splitext(os.path.basename(plugin))[0]
+        print(plugin)
+        plugin_name = os.path.splitext(os.path.basename(plugin[1]))[0]
         button = tk.Button(plugin_window, text=plugin_name, command=lambda path=plugin: handle_plugin_selection(path))
         button.pack()
 
