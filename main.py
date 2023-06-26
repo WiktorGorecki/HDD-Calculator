@@ -152,6 +152,19 @@ def plugins_menu():
         plugin_path, _ = plugins[int(answer) - 1]
         plugin_path += "/main.py"
         result = run_plugin(plugin_path)
+
+        # MENU
+
+        print("\n\n[1] Visualize the drive")
+        print("[2] Drive statistics")
+        print("[3] Back to the main menu")
+        answer = input(">")
+        if answer == "1":
+            show_disk(result[0], result[1], result[2], result[3])
+        elif answer == "2":
+            show_stats(result[0], result[1], result[2], result[3])
+        elif answer == "3":
+            main_menu()
     else:
         plugins_menu()
 
